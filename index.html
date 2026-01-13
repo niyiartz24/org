@@ -14,7 +14,7 @@
             --text-primary: #1e293b; --text-secondary: #64748b;
             --border: #e2e8f0; --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
         }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: var(--bg-main); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: var(--bg-main); color: var(--text-primary); line-height: 1.8; min-height: 100vh; }
         .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
         .header { background: var(--bg-card); padding: 20px 0; box-shadow: var(--shadow); margin-bottom: 30px; position: sticky; top: 0; z-index: 100; }
         .header-content { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
@@ -26,7 +26,7 @@
         .card { background: var(--bg-card); padding: 50px 40px; border-radius: 20px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); max-width: 700px; width: 100%; }
         .badge { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 20px; border-radius: 25px; font-size: 12px; font-weight: 600; margin-bottom: 20px; }
         h1 { font-size: 36px; margin-bottom: 15px; color: var(--primary); font-weight: 700; }
-        .subtitle { color: var(--text-secondary); margin-bottom: 35px; font-size: 16px; }
+        .subtitle { color: var(--text-secondary); margin-bottom: 35px; font-size: 16px; line-height: 1.6; }
         .upload-zone { border: 3px dashed var(--border); border-radius: 16px; padding: 50px 30px; margin-bottom: 25px; cursor: pointer; transition: all 0.3s; background: #fafbfc; }
         .upload-zone:hover { border-color: var(--primary); background: #f1f5f9; }
         .upload-zone.dragover { border-color: var(--primary); background: var(--primary-light); }
@@ -53,21 +53,22 @@
         .timer.warning { color: var(--danger); animation: pulse 1s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
         .exam-layout { display: grid; grid-template-columns: 1fr 320px; gap: 25px; }
-        .question-area { background: var(--bg-card); padding: 35px; border-radius: 16px; box-shadow: var(--shadow); }
-        .question-header { margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid var(--border); }
-        .question-num { font-size: 14px; color: var(--text-secondary); font-weight: 600; }
-        .question-text { font-size: 20px; font-weight: 600; margin-top: 12px; line-height: 1.7; }
-        .options-list { margin: 35px 0; }
-        .option { background: #fafbfc; border: 2px solid var(--border); padding: 18px 20px; margin-bottom: 14px; border-radius: 12px; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; }
+        .question-area { background: var(--bg-card); padding: 40px; border-radius: 16px; box-shadow: var(--shadow); }
+        .question-header { margin-bottom: 35px; padding-bottom: 25px; border-bottom: 2px solid var(--border); }
+        .question-num { font-size: 14px; color: var(--text-secondary); font-weight: 600; margin-bottom: 15px; }
+        .question-text { font-size: 22px; font-weight: 600; line-height: 1.8; color: var(--text-primary); }
+        .options-list { margin: 40px 0; }
+        .option { background: #fafbfc; border: 2px solid var(--border); padding: 20px 22px; margin-bottom: 18px; border-radius: 12px; cursor: pointer; transition: all 0.3s; display: flex; align-items: flex-start; min-height: 70px; }
         .option:hover { border-color: var(--primary); background: #f1f5f9; }
         .option.selected { background: var(--primary-light); border-color: var(--primary); }
         .option.correct { background: var(--success-light); border-color: var(--success); }
         .option.wrong { background: var(--danger-light); border-color: var(--danger); }
-        .option-letter { display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; background: white; border: 2px solid var(--border); border-radius: 50%; margin-right: 15px; font-weight: 700; flex-shrink: 0; }
+        .option-letter { display: inline-flex; align-items: center; justify-content: center; min-width: 40px; height: 40px; background: white; border: 2px solid var(--border); border-radius: 50%; margin-right: 18px; font-weight: 700; font-size: 16px; flex-shrink: 0; }
         .option.selected .option-letter { background: var(--primary); color: white; border-color: var(--primary); }
         .option.correct .option-letter { background: var(--success); color: white; border-color: var(--success); }
         .option.wrong .option-letter { background: var(--danger); color: white; border-color: var(--danger); }
-        .nav-buttons { display: flex; justify-content: space-between; margin-top: 35px; gap: 15px; }
+        .option-text { flex: 1; font-size: 16px; line-height: 1.8; padding-top: 2px; }
+        .nav-buttons { display: flex; justify-content: space-between; margin-top: 40px; gap: 15px; }
         .sidebar { background: var(--bg-card); padding: 25px; border-radius: 16px; box-shadow: var(--shadow); height: fit-content; position: sticky; top: 100px; }
         .question-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px; }
         .grid-item { aspect-ratio: 1; border: 2px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; background: white; }
@@ -81,13 +82,16 @@
         .score-number { font-size: 42px; font-weight: 700; color: var(--primary); display: block; margin-bottom: 8px; }
         .action-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
         .review-area { margin-top: 30px; }
-        .review-item { background: var(--bg-card); padding: 30px; margin-bottom: 25px; border-radius: 12px; border-left: 5px solid var(--border); box-shadow: var(--shadow); }
+        .review-item { background: var(--bg-card); padding: 35px; margin-bottom: 30px; border-radius: 12px; border-left: 5px solid var(--border); box-shadow: var(--shadow); }
         .review-item.correct { border-left-color: var(--success); }
         .review-item.incorrect { border-left-color: var(--danger); }
+        .review-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .review-badge { padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; }
         .review-badge.correct { background: var(--success-light); color: var(--success); }
         .review-badge.incorrect { background: var(--danger-light); color: var(--danger); }
-        .explanation { margin-top: 20px; padding: 15px; background: var(--danger-light); border-radius: 8px; font-size: 14px; }
+        .review-question { font-size: 19px; font-weight: 600; margin-bottom: 25px; line-height: 1.8; }
+        .explanation { margin-top: 25px; padding: 18px; background: var(--danger-light); border-radius: 8px; font-size: 15px; line-height: 1.7; }
+        .explanation strong { color: var(--danger); }
         .hidden { display: none !important; }
         @media (max-width: 968px) { .exam-layout { grid-template-columns: 1fr; } .sidebar { position: static; } }
     </style>
@@ -100,11 +104,11 @@
                 <div class="card">
                     <span class="badge">✨ AI-Powered</span>
                     <h1>CBT Quiz Platform</h1>
-                    <p class="subtitle">Upload any PDF and AI generates 70 quiz questions</p>
+                    <p class="subtitle">Upload any PDF and AI generates 70 quiz questions with contextual options</p>
                     <div class="upload-zone" id="uz"><div class="upload-icon">📄</div><p><strong>Click to upload PDF</strong></p></div>
                     <input type="file" id="fi" accept=".pdf">
                     <button class="btn btn-primary" id="sb" disabled>Start Exam</button>
-                    <div class="info-box"><h3>How It Works</h3><ul><li>Upload PDF document</li><li>AI generates 70 questions</li><li>20 minute exam</li><li>Instant results</li></ul></div>
+                    <div class="info-box"><h3>How It Works</h3><ul><li>Upload PDF document</li><li>AI generates contextual questions</li><li>20 minute exam</li><li>Instant results</li></ul></div>
                 </div>
             </div>
         </div>
@@ -154,17 +158,44 @@ el.uz.ondragleave=()=>el.uz.classList.remove('dragover');
 el.uz.ondrop=e=>{e.preventDefault();el.uz.classList.remove('dragover');const f=e.dataTransfer.files[0];if(f&&f.type==='application/pdf')pr(f);else alert('Upload PDF');};
 el.fi.onchange=e=>{const f=e.target.files[0];if(f)pr(f);};
 async function pr(f){sw('load');up(10,'Reading PDF...');try{const ab=await f.arrayBuffer();up(20,'Loading...');const pd=await pdfjsLib.getDocument(ab).promise;const tp=pd.numPages;let tx='';for(let i=1;i<=tp;i++){const pg=await pd.getPage(i);const tc=await pg.getTextContent();tx+=tc.items.map(it=>it.str).join(' ')+'\n\n';up(20+(i/tp)*30,'Extracting...',`Page ${i}/${tp}`);}const ct=tx.trim();if(ct.length<500)throw new Error('PDF too short');up(55,'Extracted!');await gq(ct);up(100,'Ready!');setTimeout(()=>{sw('home');el.sb.disabled=false;el.uz.innerHTML='<div class="upload-icon">✅</div><p><strong>70 Questions Ready!</strong></p>';},1000);}catch(e){alert('Error: '+e.message);sw('home');}}
-function ch(t,m=2500){const w=t.split(/\s+/);const c=[];let cu='';for(const wd of w){const te=cu+(cu?' ':'')+wd;if(te.length>m&&cu){c.push(cu.trim());cu=wd;}else cu=te;}if(cu)c.push(cu.trim());return c;}
-async function gq(t){const cs=ch(t);const pc=Math.ceil(70/cs.length);let aq=[];for(let i=0;i<cs.length&&aq.length<70;i++){up(55+((i+1)/cs.length)*40,'AI generating...',`Section ${i+1}/${cs.length}`);try{const qs=await gc(cs[i],pc);aq=aq.concat(qs);}catch(e){console.error(e);}await new Promise(r=>setTimeout(r,200));}st.qs=aq.slice(0,70);if(st.qs.length<70){const n=70-st.qs.length;st.qs=st.qs.concat(fb(n,t));}}
-async function gc(t,n){const pr=`Create ${n} MCQs from this. Return ONLY JSON array:\n${t.substring(0,2500)}\n[{"question":"Q?","options":{"A":"a","B":"b","C":"c","D":"d"},"correctAnswer":"A"}]`;try{const rs=await Promise.race([fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:pr}]})}),new Promise((_,rj)=>setTimeout(()=>rj(new Error('Timeout')),30000))]);if(!rs.ok)throw new Error('API fail');const d=await rs.json();const tx=d.content[0].text.trim();const m=tx.match(/\[[\s\S]*\]/);if(!m)return[];const pq=JSON.parse(m[0]);return pq.map((q,i)=>({id:Date.now()+i+Math.random(),question:q.question,options:q.options,correctAnswer:q.correctAnswer}));}catch(e){console.error(e);return[];}}
-function fb(n,t){const s=t.split(/[.!?]+/).filter(x=>x.trim().length>30).slice(0,n);return s.map((x,i)=>({id:Date.now()+i,question:`What does this mean: "${x.trim().substring(0,100)}..."?`,options:{A:"Main concept",B:"Partially related",C:"Contradicts",D:"Unrelated"},correctAnswer:"A"}));}
+function ch(t,m=2000){const w=t.split(/\s+/);const c=[];let cu='';for(const wd of w){const te=cu+(cu?' ':'')+wd;if(te.length>m&&cu){c.push(cu.trim());cu=wd;}else cu=te;}if(cu)c.push(cu.trim());return c;}
+async function gq(t){const cs=ch(t,2000);const pc=Math.ceil(70/cs.length);let aq=[];for(let i=0;i<cs.length&&aq.length<70;i++){up(55+((i+1)/cs.length)*40,'AI generating...',`Section ${i+1}/${cs.length}`);try{const qs=await gc(cs[i],pc);aq=aq.concat(qs);}catch(e){console.error(e);}await new Promise(r=>setTimeout(r,300));}st.qs=aq.slice(0,70);if(st.qs.length<70){const n=70-st.qs.length;st.qs=st.qs.concat(fb(n,t));}}
+async function gc(t,n){const pr=`You are an expert educator creating exam questions. Based on the following content, generate EXACTLY ${n} multiple-choice questions.
+
+CONTENT:
+${t.substring(0,2000)}
+
+CRITICAL REQUIREMENTS:
+1. Questions must be clear, specific, and test understanding
+2. Each question MUST have exactly 4 distinct options (A, B, C, D)
+3. Options must be meaningfully different from each other
+4. Options should be based on the content, not generic
+5. One option must be clearly correct
+6. Wrong options should be plausible but incorrect based on the content
+7. Avoid generic options like "All of the above" or "None of the above"
+
+Return ONLY a JSON array with NO other text:
+[
+  {
+    "question": "Specific question about the content?",
+    "options": {
+      "A": "First specific option based on content",
+      "B": "Second specific option based on content", 
+      "C": "Third specific option based on content",
+      "D": "Fourth specific option based on content"
+    },
+    "correctAnswer": "A"
+  }
+]`;
+try{const rs=await Promise.race([fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:2000,messages:[{role:"user",content:pr}]})}),new Promise((_,rj)=>setTimeout(()=>rj(new Error('Timeout')),35000))]);if(!rs.ok)throw new Error('API fail');const d=await rs.json();const tx=d.content[0].text.trim();const m=tx.match(/\[[\s\S]*\]/);if(!m)return[];const pq=JSON.parse(m[0]);return pq.map((q,i)=>({id:Date.now()+i+Math.random(),question:q.question,options:q.options,correctAnswer:q.correctAnswer}));}catch(e){console.error(e);return[];}}
+function fb(n,t){const ss=t.split(/[.!?]+/).filter(x=>x.trim().length>40);const qs=[];for(let i=0;i<n&&i<ss.length;i++){const s=ss[i].trim();const words=s.split(' ');const key=words.slice(0,Math.min(5,words.length)).join(' ');qs.push({id:Date.now()+i,question:`According to the content, what is meant by "${key}..."?`,options:{A:`It refers to ${key} as the primary concept discussed`,B:`It describes ${key} in relation to secondary topics`,C:`It contradicts the meaning of ${key} in this context`,D:`It does not mention ${key} in this way`},correctAnswer:"A"});}return qs;}
 el.sb.onclick=()=>{const sh=[...st.qs].sort(()=>Math.random()-0.5);st.eq=sh.slice(0,70);st.ci=0;st.ua={};st.tl=1200;st.st=Date.now();sw('exam');se();stm();};
 function se(){rg();dq();un();window.addEventListener('beforeunload',pv);}
 function pv(e){e.preventDefault();e.returnValue='';}
 function rg(){el.qg.innerHTML='';for(let i=0;i<70;i++){const d=document.createElement('div');d.className='grid-item';d.textContent=i+1;if(i===st.ci)d.classList.add('current');if(st.ua[i]!==undefined)d.classList.add('answered');d.onclick=()=>nt(i);el.qg.appendChild(d);}}
 function ug(){const its=el.qg.querySelectorAll('.grid-item');its.forEach((it,i)=>{it.classList.remove('current','answered');if(i===st.ci)it.classList.add('current');if(st.ua[i]!==undefined)it.classList.add('answered');});}
 function nt(i){st.ci=i;dq();ug();un();}
-function dq(){const q=st.eq[st.ci];el.ql.textContent=`Question ${st.ci+1} of 70`;el.qc.textContent=`${st.ci+1}/70`;el.qd.textContent=q.question;el.ol.innerHTML='';['A','B','C','D'].forEach(l=>{const d=document.createElement('div');d.className='option';d.dataset.l=l;if(st.ua[st.ci]===l)d.classList.add('selected');d.innerHTML=`<span class="option-letter">${l}</span><span>${q.options[l]}</span>`;d.onclick=()=>sa(l);el.ol.appendChild(d);});}
+function dq(){const q=st.eq[st.ci];el.ql.textContent=`Question ${st.ci+1} of 70`;el.qc.textContent=`${st.ci+1}/70`;el.qd.textContent=q.question;el.ol.innerHTML='';['A','B','C','D'].forEach(l=>{const d=document.createElement('div');d.className='option';d.dataset.l=l;if(st.ua[st.ci]===l)d.classList.add('selected');d.innerHTML=`<span class="option-letter">${l}</span><span class="option-text">${q.options[l]}</span>`;d.onclick=()=>sa(l);el.ol.appendChild(d);});}
 function sa(l){st.ua[st.ci]=l;el.ol.querySelectorAll('.option').forEach(o=>{o.classList.remove('selected');if(o.dataset.l===l)o.classList.add('selected');});ug();}
 el.pb1.onclick=()=>{if(st.ci>0)nt(st.ci-1);};
 el.nb.onclick=()=>{if(st.ci<69)nt(st.ci+1);};
@@ -174,9 +205,9 @@ el.sub.onclick=()=>{const a=Object.keys(st.ua).length;if(a<70&&!confirm(`${70-a}
 function sm(au){clearInterval(st.tid);window.removeEventListener('beforeunload',pv);st.et=Date.now();sw('res');sr();}
 function sr(){let co=0,wr=0;for(let i=0;i<70;i++){const q=st.eq[i];const a=st.ua[i];if(a===q.correctAnswer)co++;else if(a!==undefined)wr++;}const pc=Math.round((co/70)*100);const us=Math.floor((st.et-st.st)/1000);const m=Math.floor(us/60);const s=us%60;el.ps.textContent=`${pc}%`;el.cs.textContent=co;el.ws.textContent=wr;el.ts.textContent=`${m}:${s.toString().padStart(2,'0')}`;localStorage.setItem('sl_score',JSON.stringify({pc,co,wr,t:`${m}:${s.toString().padStart(2,'0')}`,d:new Date().toISOString()}));}
 el.rb.onclick=()=>{el.rv.classList.remove('hidden');rv();el.rv.scrollIntoView({behavior:'smooth'});};
-function rv(){el.rv.innerHTML='<div class="results-card"><h2>Review</h2></div>';st.eq.forEach((q,i)=>{const ua=st.ua[i];const ok=ua===q.correctAnswer;const d=document.createElement('div');d.className=`review-item ${ok?'correct':'incorrect'}`;let op='';['A','B','C','D'].forEach(l=>{let cl='option';if(l===q.correctAnswer)cl+=' correct';else if(l===ua&&!ok)cl+=' wrong';op+=`<div class="${cl}"><span class="option-letter">${l}</span><span>${q.options[l]}</span></div>`;});d.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:15px"><span>Q${i+1}</span><span class="review-badge ${ok?'correct':'incorrect'}">${ok?'✓':'✗'}</span></div><div style="font-size:17px;font-weight:600;margin-bottom:20px">${q.question}</div><div>${op}</div>${!ok?`<div class="explanation"><strong>Your:</strong> ${ua||'None'}<br><strong>Correct:</strong> ${q.correctAnswer}</div>`:''}`;el.rv.appendChild(d);});}
-el.ne.onclick=()=>{if(confirm('New exam?'))location.reload();};
-el.hb.onclick=()=>{if(confirm('Go home?'))location.reload();};
+function rv(){el.rv.innerHTML='<div class="results-card"><h2>Answer Review</h2></div>';st.eq.forEach((q,i)=>{const ua=st.ua[i];const ok=ua===q.correctAnswer;const d=document.createElement('div');d.className=`review-item ${ok?'correct':'incorrect'}`;let op='';['A','B','C','D'].forEach(l=>{let cl='option';if(l===q.correctAnswer)cl+=' correct';else if(l===ua&&!ok)cl+=' wrong';op+=`<div class="${cl}"><span class="option-letter">${l}</span><span class="option-text">${q.options[l]}</span></div>`;});d.innerHTML=`<div class="review-top"><span style="font-weight:600;color:var(--text-secondary)">Question ${i+1} of 70</span><span class="review-badge ${ok?'correct':'incorrect'}">${ok?'✓ Correct':'✗ Wrong'}</span></div><div class="review-question">${q.question}</div><div class="options-list">${op}</div>${!ok?`<div class="explanation"><strong>Your answer:</strong> ${ua||'Not answered'}<br><strong>Correct answer:</strong> ${q.correctAnswer} - ${q.options[q.correctAnswer]}</div>`:''}`;el.rv.appendChild(d);});}
+el.ne.onclick=()=>{if(confirm('Start a new exam?'))location.reload();};
+el.hb.onclick=()=>{if(confirm('Return to home?'))location.reload();};
     </script>
 </body>
 </html>
