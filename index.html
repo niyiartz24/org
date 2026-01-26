@@ -6,562 +6,122 @@
     <title>SynthaxLab CSC 201 Mock Exam</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
-        .container { max-width: 900px; margin: 0 auto; }
-        .card { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); margin-bottom: 20px; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { color: #667eea; font-size: 2.5em; margin-bottom: 10px; }
-        .timer { background: #ff6b6b; color: white; padding: 15px 30px; border-radius: 50px; font-size: 1.5em; font-weight: bold; display: inline-block; margin: 20px 0; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 15px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); margin-bottom: 20px; animation: slideIn 0.5s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .header { text-align: center; margin-bottom: 25px; }
+        .header h1 { color: #667eea; font-size: clamp(2em, 6vw, 3em); margin-bottom: 10px; font-weight: 800; letter-spacing: -1px; }
+        .header p { font-size: clamp(1em, 3vw, 1.2em); color: #666; font-weight: 500; }
+        .timer { background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%); color: white; padding: 15px 30px; border-radius: 50px; font-size: clamp(1.2em, 4vw, 1.8em); font-weight: bold; display: inline-block; margin: 20px 0; box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4); }
         .timer.warning { animation: pulse 1s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        .question-nav { display: grid; grid-template-columns: repeat(10, 1fr); gap: 10px; margin-bottom: 30px; }
-        .nav-btn { padding: 10px; border: 2px solid #ddd; background: white; border-radius: 5px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
-        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .nav-btn.answered { background: #51cf66; color: white; border-color: #51cf66; }
-        .nav-btn.current { background: #667eea; color: white; border-color: #667eea; }
-        .question-container { margin-bottom: 30px; }
-        .question-header { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
-        .question-text { font-size: 1.2em; color: #333; margin-bottom: 20px; line-height: 1.6; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4); } 50% { transform: scale(1.05); box-shadow: 0 12px 30px rgba(255, 107, 107, 0.6); } }
+        .question-nav { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 10px; margin-bottom: 25px; }
+        .nav-btn { padding: 12px; border: 2px solid #e0e0e0; background: white; border-radius: 10px; cursor: pointer; font-weight: 700; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-size: clamp(0.9em, 2.5vw, 1.1em); }
+        .nav-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); border-color: #667eea; }
+        .nav-btn.answered { background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%); color: white; border-color: #51cf66; }
+        .nav-btn.current { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-color: #667eea; transform: scale(1.1); }
+        .question-header { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; font-size: clamp(0.95em, 2.5vw, 1.1em); font-weight: 600; color: #495057; }
+        .question-text { font-size: clamp(1.1em, 3vw, 1.4em); color: #212529; margin-bottom: 20px; line-height: 1.7; font-weight: 500; }
         .options { display: flex; flex-direction: column; gap: 15px; }
-        .option { padding: 15px 20px; border: 2px solid #ddd; border-radius: 10px; cursor: pointer; transition: all 0.3s; background: white; }
-        .option:hover { border-color: #667eea; background: #f8f9ff; transform: translateX(5px); }
-        .option.selected { background: #667eea; color: white; border-color: #667eea; }
-        .controls { display: flex; justify-content: space-between; margin-top: 30px; }
-        .btn { padding: 12px 30px; border: none; border-radius: 25px; font-size: 1em; font-weight: bold; cursor: pointer; transition: all 0.3s; }
-        .btn-primary { background: #667eea; color: white; }
-        .btn-primary:hover { background: #5568d3; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
-        .btn-success { background: #51cf66; color: white; font-size: 1.2em; padding: 15px 40px; }
-        .btn-success:hover { background: #40c057; }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .login-form { max-width: 400px; margin: 100px auto; }
+        .option { padding: 18px 22px; border: 3px solid #e9ecef; border-radius: 12px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: white; font-size: clamp(1em, 2.5vw, 1.15em); font-weight: 500; position: relative; overflow: hidden; }
+        .option::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: #667eea; transform: scaleY(0); transition: transform 0.3s; }
+        .option:hover { border-color: #667eea; background: #f8f9ff; transform: translateX(8px); }
+        .option:hover::before { transform: scaleY(1); }
+        .option.selected { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-color: #667eea; transform: translateX(8px); }
+        .option.selected::before { transform: scaleY(1); background: white; }
+        .controls { display: flex; justify-content: space-between; gap: 15px; margin-top: 30px; flex-wrap: wrap; }
+        .btn { padding: 14px 30px; border: none; border-radius: 12px; font-size: clamp(1em, 2.5vw, 1.1em); font-weight: 700; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); }
+        .btn-success { background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%); color: white; }
+        .btn-success:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(81, 207, 102, 0.4); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        .login-form { max-width: 500px; margin: 60px auto; }
         .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; color: #333; font-weight: 600; }
-        .form-group input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
-        .form-group input:focus { outline: none; border-color: #667eea; }
+        .form-group label { display: block; margin-bottom: 10px; color: #495057; font-weight: 600; font-size: clamp(0.95em, 2.5vw, 1.05em); }
+        .form-group input { width: 100%; padding: 14px 18px; border: 2px solid #e9ecef; border-radius: 12px; font-size: clamp(1em, 2.5vw, 1.1em); transition: all 0.3s; }
+        .form-group input:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1); }
         .results { text-align: center; }
-        .score { font-size: 4em; color: #667eea; font-weight: bold; margin: 20px 0; }
-        .results-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 30px 0; }
-        .stat-card { background: #f8f9fa; padding: 20px; border-radius: 10px; }
-        .stat-value { font-size: 2em; font-weight: bold; color: #667eea; }
-        .admin-dashboard { max-width: 1200px; margin: 0 auto; }
-        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .results-table { width: 100%; border-collapse: collapse; }
-        .results-table th, .results-table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        .results-table th { background: #667eea; color: white; }
-        .results-table tr:hover { background: #f8f9fa; }
-        .progress-bar { width: 100%; height: 8px; background: #e9ecef; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); transition: width 0.3s; }
+        .score { font-size: clamp(3em, 10vw, 5em); background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 900; margin: 30px 0; }
+        .results-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 20px; margin: 30px 0; }
+        .stat-card { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .stat-value { font-size: clamp(2em, 6vw, 2.5em); font-weight: 800; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .stat-label { font-size: clamp(0.9em, 2.5vw, 1em); margin-top: 8px; color: #6c757d; font-weight: 600; }
+        .progress-bar { width: 100%; height: 10px; background: #e9ecef; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 10px; }
         .hidden { display: none; }
         .intro-screen { text-align: center; }
-        .exam-info { background: #f8f9fa; padding: 30px; border-radius: 10px; margin: 30px 0; text-align: left; }
-        .exam-info h3 { color: #667eea; margin-bottom: 15px; }
-        .exam-info ul { list-style-position: inside; line-height: 2; }
-        .admin-btn { position: fixed; bottom: 20px; right: 20px; background: #667eea; color: white; border: none; padding: 15px 25px; border-radius: 50px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-        .admin-btn:hover { background: #5568d3; }
+        .exam-info { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 30px; border-radius: 15px; margin: 30px 0; text-align: left; }
+        .exam-info h3 { color: #667eea; margin-bottom: 20px; font-size: clamp(1.2em, 3vw, 1.5em); font-weight: 700; }
+        .exam-info ul { list-style: none; line-height: 2.2; font-size: clamp(0.95em, 2.5vw, 1.05em); }
+        .exam-info li::before { content: "✓"; color: #51cf66; font-weight: bold; margin-right: 10px; }
+        .review-section { margin-top: 40px; max-height: 600px; overflow-y: auto; padding-right: 10px; }
+        .review-question { background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 20px; border-left: 5px solid #e9ecef; }
+        .review-question.correct { border-left-color: #51cf66; background: #f3faf4; }
+        .review-question.wrong { border-left-color: #ff6b6b; background: #fff5f5; }
+        .review-question.unanswered { border-left-color: #ffa94d; background: #fff9db; }
+        .review-q-text { font-weight: 600; margin-bottom: 15px; color: #212529; font-size: clamp(1em, 2.5vw, 1.1em); }
+        .review-answer { padding: 10px 15px; margin: 8px 0; border-radius: 8px; font-size: clamp(0.9em, 2.5vw, 1em); }
+        .review-answer.correct-answer { background: #d3f9d8; border: 2px solid #51cf66; font-weight: 600; }
+        .review-answer.wrong-answer { background: #ffe3e3; border: 2px solid #ff6b6b; font-weight: 600; text-decoration: line-through; }
+        .answer-label { font-size: 0.85em; text-transform: uppercase; font-weight: 700; margin-bottom: 5px; display: block; }
+        @media (max-width: 768px) { body { padding: 8px; } .card { padding: 20px; border-radius: 15px; } .question-nav { gap: 6px; grid-template-columns: repeat(auto-fill, minmax(45px, 1fr)); } .controls { flex-direction: column; } .btn { width: 100%; } }
+        @media (max-width: 480px) { .results-details { grid-template-columns: 1fr; } .question-nav { grid-template-columns: repeat(7, 1fr); } }
     </style>
 </head>
 <body>
     <div class="container">
         <div id="loginScreen" class="card login-form">
-            <div class="header">
-                <h1>🎓 SynthaxLab</h1>
-                <p>CSC 201 Mock Exam</p>
-            </div>
-            <div class="form-group">
-                <label>Full Name *</label>
-                <input type="text" id="studentName" placeholder="Enter your full name" required>
-            </div>
-            <div class="form-group">
-                <label>Email *</label>
-                <input type="email" id="studentEmail" placeholder="Enter your email" required>
-            </div>
-            <div class="form-group">
-                <label>Matric Number (Optional)</label>
-                <input type="text" id="matricNumber" placeholder="Enter your matric number">
-            </div>
-            <button class="btn btn-primary" style="width: 100%;" onclick="startExam()">Start Exam</button>
+            <div class="header"><h1>🎓 SynthaxLab</h1><p>CSC 201 Mock Exam</p></div>
+            <div class="form-group"><label>Full Name *</label><input type="text" id="studentName" placeholder="Enter your full name" required></div>
+            <div class="form-group"><label>Email *</label><input type="email" id="studentEmail" placeholder="Enter your email" required></div>
+            <div class="form-group"><label>Matric Number (Optional)</label><input type="text" id="matricNumber" placeholder="Enter your matric number"></div>
+            <button class="btn btn-primary" style="width: 100%;" id="startExamBtn">Start Exam</button>
         </div>
-
         <div id="introScreen" class="card hidden">
-            <div class="intro-screen">
-                <h1>Welcome to CSC 201 Mock Exam</h1>
-                <div class="exam-info">
-                    <h3>📋 Exam Instructions:</h3>
-                    <ul>
-                        <li>Total Questions: 70 (randomly selected from 150)</li>
-                        <li>Time Limit: 15 minutes</li>
-                        <li>Each question has 4 options</li>
-                        <li>Questions are shuffled randomly</li>
-                        <li>Exam will auto-submit when time expires</li>
-                        <li>You can navigate between questions freely</li>
-                        <li>Click "Submit Exam" when you're done</li>
-                    </ul>
-                </div>
-                <button class="btn btn-success" onclick="beginExam()">Begin Exam</button>
+            <div class="intro-screen"><h1>Welcome to CSC 201 Mock Exam</h1>
+                <div class="exam-info"><h3>📋 Exam Instructions</h3><ul><li>Total Questions: 70 (randomly selected from 150)</li><li>Time Limit: 15 minutes</li><li>Each question has 4 options</li><li>Questions are shuffled randomly</li><li>Exam will auto-submit when time expires</li><li>You can navigate between questions freely</li><li>Review all answers at the end</li></ul></div>
+                <button class="btn btn-success" id="beginExamBtn">Begin Exam Now</button>
             </div>
         </div>
-
         <div id="examScreen" class="hidden">
             <div class="card">
-                <div class="header">
-                    <h1>CSC 201 Mock Exam</h1>
-                    <div class="timer" id="timer">15:00</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressBar"></div>
-                    </div>
-                </div>
+                <div class="header"><h1>CSC 201 Mock Exam</h1><div class="timer" id="timer">15:00</div><div class="progress-bar"><div class="progress-fill" id="progressBar"></div></div></div>
                 <div class="question-nav" id="questionNav"></div>
-                <div class="question-container">
-                    <div class="question-header">
-                        <strong>Question <span id="currentQ">1</span> of 70</strong>
-                    </div>
-                    <div class="question-text" id="questionText"></div>
-                    <div class="options" id="optionsContainer"></div>
-                </div>
-                <div class="controls">
-                    <button class="btn btn-primary" id="prevBtn" onclick="previousQuestion()">Previous</button>
-                    <button class="btn btn-success" onclick="submitExam()">Submit Exam</button>
-                    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Next</button>
-                </div>
+                <div class="question-container"><div class="question-header"><strong>Question <span id="currentQ">1</span> of 70</strong></div><div class="question-text" id="questionText"></div><div class="options" id="optionsContainer"></div></div>
+                <div class="controls"><button class="btn btn-primary" id="prevBtn">← Previous</button><button class="btn btn-success" id="submitExamBtn">Submit Exam</button><button class="btn btn-primary" id="nextBtn">Next →</button></div>
             </div>
         </div>
-
         <div id="resultsScreen" class="card hidden">
-            <div class="results">
-                <h1>🎉 Exam Completed!</h1>
-                <div class="score" id="finalScore">0%</div>
-                <div class="results-details">
-                    <div class="stat-card">
-                        <div class="stat-value" id="correctCount">0</div>
-                        <div>Correct</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="wrongCount">0</div>
-                        <div>Wrong</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="unansweredCount">0</div>
-                        <div>Unanswered</div>
-                    </div>
-                </div>
-                <button class="btn btn-primary" onclick="location.reload()">Take Another Exam</button>
-            </div>
-        </div>
-
-        <div id="adminDashboard" class="admin-dashboard hidden">
-            <div class="card">
-                <div class="dashboard-header">
-                    <h1>📊 Admin Dashboard</h1>
-                    <button class="btn btn-primary" onclick="closeAdmin()">Close</button>
-                </div>
-                <div id="resultsTableContainer">
-                    <table class="results-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Matric Number</th>
-                                <th>Score</th>
-                                <th>Correct</th>
-                                <th>Wrong</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="resultsTableBody"></tbody>
-                    </table>
-                </div>
+            <div class="results"><h1>🎉 Exam Completed!</h1><div class="score" id="finalScore">0%</div>
+                <div class="results-details"><div class="stat-card"><div class="stat-value" id="correctCount">0</div><div class="stat-label">Correct</div></div><div class="stat-card"><div class="stat-value" id="wrongCount">0</div><div class="stat-label">Wrong</div></div><div class="stat-card"><div class="stat-value" id="unansweredCount">0</div><div class="stat-label">Unanswered</div></div></div>
+                <div class="review-section" id="reviewSection"></div>
+                <button class="btn btn-primary" id="retakeBtn" style="margin-top: 20px;">Take Another Exam</button>
             </div>
         </div>
     </div>
-    <button class="admin-btn" onclick="openAdmin()">Admin</button>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-        import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js';
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js';
-
-        const firebaseConfig = {
-    apiKey: "AIzaSyCbyxG07RYRPwIKZlVnkHoj9ZwbdTuSf2g",
-    authDomain: "student-management-syste-935d7.firebaseapp.com",
-    projectId: "student-management-syste-935d7",
-    storageBucket: "student-management-syste-935d7.firebasestorage.app",
-    messagingSenderId: "673806251746",
-    appId: "1:673806251746:web:b35b507f59289a556e50bb"
-  };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        const questionBank = [
-            {q:"A computer is an electronic machine which accepts data in the form of ___",opts:["Output","Input","Storage","Processing"],ans:1},
-            {q:"Computer science is the study of theory, experimentation, and ___",opts:["Engineering","Mathematics","Physics","Chemistry"],ans:0},
-            {q:"What does a computer supply results as?",opts:["Data","Input","Information","Processing"],ans:2},
-            {q:"A computer operates under the control of a ___",opts:["Stored program","User","Monitor","Keyboard"],ans:0},
-            {q:"Computer science involves systematic study of ___",opts:["Hardware only","Software only","Algorithms","Networks only"],ans:2},
-            {q:"The first generation of computers used ___ for circuitry",opts:["Transistors","Vacuum tubes","Integrated circuits","Microprocessors"],ans:1},
-            {q:"Which generation of computers used transistors?",opts:["First","Second","Third","Fourth"],ans:1},
-            {q:"First generation computers were used from ___",opts:["1940-1956","1956-1963","1964-1971","1971-present"],ans:0},
-            {q:"Second generation computers were used from ___",opts:["1940-1956","1956-1963","1964-1971","1971-present"],ans:1},
-            {q:"The development of integrated circuits characterized which generation?",opts:["First","Second","Third","Fourth"],ans:2},
-            {q:"Intel 4004 chip was introduced in which generation?",opts:["Second","Third","Fourth","Fifth"],ans:2},
-            {q:"The fifth generation of computers is based on ___",opts:["Vacuum tubes","Transistors","Microprocessors","Artificial Intelligence"],ans:3},
-            {q:"First generation computers relied on ___ language",opts:["Assembly","Machine","High-level","Natural"],ans:1},
-            {q:"What did first generation computers use for input?",opts:["Keyboard","Mouse","Punched cards","Touch screen"],ans:2},
-            {q:"GUI stands for ___",opts:["General User Interface","Graphical User Interface","Global User Interface","Generic User Interface"],ans:1},
-            {q:"Which generation introduced operating systems?",opts:["First","Second","Third","Fourth"],ans:2},
-            {q:"High level programming languages were developed in ___ generation",opts:["First","Second","Third","Fourth"],ans:1},
-            {q:"COBOL and FORTRAN were developed in which generation?",opts:["First","Second","Third","Fourth"],ans:1},
-            {q:"Which generation saw the development of keyboards and monitors?",opts:["First","Second","Third","Fourth"],ans:2},
-            {q:"Microprocessors became available in which generation?",opts:["Second","Third","Fourth","Fifth"],ans:2},
-            {q:"The Internet was developed in which generation?",opts:["Second","Third","Fourth","Fifth"],ans:2},
-            {q:"Quantum computation is expected in which generation?",opts:["Third","Fourth","Fifth","Sixth"],ans:2},
-            {q:"First generation computers generated a lot of ___",opts:["Sound","Heat","Light","Radiation"],ans:1},
-            {q:"Second generation computers stored instructions in ___",opts:["Punched cards","Memory","Tapes","Drums"],ans:1},
-            {q:"Third generation computers used ___ for interaction",opts:["Punched cards","Keyboards and monitors","Switches","Dials"],ans:1},
-            {q:"Digital computers represent information in ___ form",opts:["Analog","Binary","Decimal","Hexadecimal"],ans:1},
-            {q:"Analog computers represent information using ___",opts:["Binary digits","Physical quantities","Transistors","Microprocessors"],ans:1},
-            {q:"Hybrid computers combine properties of ___ computers",opts:["Digital and Mainframe","Analog and Digital","Mini and Micro","Super and Main"],ans:1},
-            {q:"Which is the largest type of computer by size?",opts:["Micro","Mini","Mainframe","Super"],ans:3},
-            {q:"Personal computers are also called ___",opts:["Mainframe","Mini","Micro","Super"],ans:2},
-            {q:"Special purpose computers are designed for ___",opts:["General tasks","Specific tasks","All tasks","No tasks"],ans:1},
-            {q:"General purpose computers can perform ___",opts:["One task","Two tasks","Limited tasks","Variety of tasks"],ans:3},
-            {q:"MAN stands for ___",opts:["Main Area Network","Metropolitan Area Network","Micro Area Network","Multiple Area Network"],ans:1},
-            {q:"LAN covers ___",opts:["A city","A country","A building or campus","The world"],ans:2},
-            {q:"WAN stands for ___",opts:["Wide Area Network","World Area Network","Wireless Area Network","Web Area Network"],ans:0},
-            {q:"Which is NOT a characteristic of computers?",opts:["Speed","Accuracy","Fatigue","Storage"],ans:2},
-            {q:"The ability to perform many tasks is called ___",opts:["Speed","Versatility","Accuracy","Diligence"],ans:1},
-            {q:"Computers can execute instructions at ___ speed",opts:["Slow","Moderate","Very great","Variable"],ans:2},
-            {q:"Computer errors are usually caused by ___",opts:["Hardware","Software","Human elements","Power"],ans:2},
-            {q:"Computers can store ___ volume of data",opts:["Small","Moderate","Large","No"],ans:2},
-            {q:"The ability to follow instructions without getting tired is ___",opts:["Speed","Accuracy","Consistency","Storage"],ans:2},
-            {q:"Computers per se do not make ___",opts:["Calculations","Errors","Decisions","Processes"],ans:1},
-            {q:"Ability to continue processing over extended period is ___",opts:["Speed","Repetitiveness","Storage","Accuracy"],ans:1},
-            {q:"Computers can carry out ___ operations",opts:["Simple","Moderate","Complex","No"],ans:2},
-            {q:"Hardware is the ___ part of the computer",opts:["Logical","Physical","Virtual","Abstract"],ans:1},
-            {q:"CPU stands for ___",opts:["Central Program Unit","Central Processing Unit","Computer Processing Unit","Central Processor Utility"],ans:1},
-            {q:"The heart of the computer is the ___",opts:["Monitor","Keyboard","CPU","Mouse"],ans:2},
-            {q:"Which is an input device?",opts:["Monitor","Printer","Keyboard","Speaker"],ans:2},
-            {q:"Which is an output device?",opts:["Mouse","Scanner","Printer","Microphone"],ans:2},
-            {q:"RAM stands for ___",opts:["Read Access Memory","Random Access Memory","Rapid Access Memory","Ready Access Memory"],ans:1},
-            {q:"ROM stands for ___",opts:["Read Only Memory","Random Only Memory","Rapid Only Memory","Ready Only Memory"],ans:0},
-            {q:"The ALU performs ___ operations",opts:["Input/Output","Storage","Arithmetic and Logic","Control"],ans:2},
-            {q:"The Control Unit coordinates activities within the ___",opts:["Monitor","CPU","Keyboard","Printer"],ans:1},
-            {q:"Main memory is also called ___ storage",opts:["Secondary","Primary","Tertiary","External"],ans:1},
-            {q:"Secondary storage is also called ___ storage",opts:["Internal","Primary","External","Main"],ans:2},
-            {q:"A mouse is an example of ___ device",opts:["Output","Input","Storage","Processing"],ans:1},
-            {q:"A monitor is an example of ___ device",opts:["Input","Output","Storage","Processing"],ans:1},
-            {q:"Data in RAM is ___",opts:["Permanent","Volatile","Read-only","Protected"],ans:1},
-            {q:"Data in ROM is ___",opts:["Volatile","Temporary","Permanent","Erasable"],ans:2},
-            {q:"BIOS stands for ___",opts:["Basic Input Output System","Binary Input Output System","Basic Internal Output System","Binary Internal Output System"],ans:0},
-            {q:"A scanner is used for ___",opts:["Printing","Displaying","Input","Processing"],ans:2},
-            {q:"The motherboard contains all vital computer ___",opts:["Software","Parts","Data","Programs"],ans:1},
-            {q:"CPU speed is measured in ___",opts:["Bytes","Hertz","Bits","Pixels"],ans:1},
-            {q:"Software is the ___ part of computer",opts:["Physical","Visible","Invisible","Tangible"],ans:2},
-            {q:"System software controls the ___",opts:["User","Hardware","Data","Input"],ans:1},
-            {q:"Application software is designed to help users perform ___",opts:["System tasks","Specific tasks","No tasks","Hardware tasks"],ans:1},
-            {q:"OS stands for ___",opts:["Open System","Operating System","Output System","Online System"],ans:1},
-            {q:"Which is system software?",opts:["MS Word","MS Excel","Windows","PowerPoint"],ans:2},
-            {q:"Which is application software?",opts:["Windows","Linux","MS Word","DOS"],ans:2},
-            {q:"MS Word is a ___ application",opts:["Spreadsheet","Word processing","Database","Presentation"],ans:1},
-            {q:"MS Excel is used for ___",opts:["Word processing","Presentations","Spreadsheets","Graphics"],ans:2},
-            {q:"DBMS stands for ___",opts:["Data Base Management System","Digital Base Management System","Data Binary Management System","Digital Binary Management System"],ans:0},
-            {q:"Utility programs perform ___ tasks",opts:["Complex","System","Routine","No"],ans:2},
-            {q:"GUI provides ___ methods for using computers",opts:["Complex","Difficult","Intuitive","Technical"],ans:2},
-            {q:"The main function of an OS is to manage ___",opts:["Users","Resources","Programs","Data"],ans:1},
-            {q:"Which is an operating system?",opts:["MS Word","Unix","Excel","PowerPoint"],ans:1},
-            {q:"Windows is an example of ___",opts:["Hardware","Application","Operating System","Utility"],ans:2},
-            {q:"Multiprogramming allows execution of ___",opts:["One program","Two programs","Multiple programs","No programs"],ans:2},
-            {q:"Time-sharing allows ___ users to share the computer",opts:["One","Two","Multiple","No"],ans:2},
-            {q:"Real-time systems are used for ___",opts:["General tasks","Time-critical tasks","Simple tasks","No tasks"],ans:1},
-            {q:"Batch processing processes data in ___",opts:["Real-time","Batches","Individually","Randomly"],ans:1},
-            {q:"Which OS function manages memory?",opts:["File management","Memory management","Process management","Device management"],ans:1},
-            {q:"A bit is an acronym for ___",opts:["Binary Digit","Binary Integer","Basic Digit","Basic Integer"],ans:0},
-            {q:"A byte consists of ___ bits",opts:["4","8","16","32"],ans:1},
-            {q:"A nibble consists of ___ bits",opts:["2","4","8","16"],ans:1},
-            {q:"Binary uses ___ digits",opts:["0-7","0-9","0-1","0-15"],ans:2},
-            {q:"Octal uses ___ as base",opts:["2","8","10","16"],ans:1},
-            {q:"Decimal uses ___ as base",opts:["2","8","10","16"],ans:2},
-            {q:"Hexadecimal uses ___ as base",opts:["2","8","10","16"],ans:3},
-            {q:"ASCII stands for ___",opts:["American Standard Code for Information Interchange","American System Code for Information Interchange","American Standard Code for Internet Interchange","American System Code for Internet Interchange"],ans:0},
-            {q:"EBCDIC uses ___ bits per character",opts:["4","7","8","16"],ans:2},
-            {q:"ASCII uses ___ bits per character",opts:["4","7","8","16"],ans:1},
-            {q:"Binary 1010 equals ___ in decimal",opts:["8","10","12","14"],ans:1},
-            {q:"Decimal 15 equals ___ in binary",opts:["1111","1110","1101","1100"],ans:0},
-            {q:"A network is a collection of ___ computers",opts:["One","Two or more","Three","Four"],ans:1},
-            {q:"LAN stands for ___",opts:["Large Area Network","Local Area Network","Long Area Network","Limited Area Network"],ans:1},
-            {q:"Star topology uses a central ___",opts:["Computer","Hub","Cable","Server"],ans:1},
-            {q:"In bus topology, all devices share ___ communication line",opts:["Multiple","Two","Single","No"],ans:2},
-            {q:"Ring topology connects each host to ___ other machines",opts:["One","Two","Three","Four"],ans:1},
-            {q:"Mesh topology provides ___ reliability",opts:["Low","Moderate","High","No"],ans:2},
-            {q:"Internet is a network of ___",opts:["Computers","Networks","Servers","Devices"],ans:1},
-            {q:"TCP/IP is used in ___",opts:["LAN only","WAN only","Internet","MAN only"],ans:2},
-            {q:"Email is an ___ service",opts:["Internet","LAN","WAN","MAN"],ans:0},
-            {q:"WWW stands for ___",opts:["World Wide Web","Wide World Web","World Web Wide","Web World Wide"],ans:0},
-            {q:"Data communication is transmission of ___ data",opts:["Analog","Digital","Electronic","Manual"],ans:2},
-            {q:"Simplex communication is ___ communication",opts:["Two-way","One-way","Multi-way","No"],ans:1},
-            {q:"Half-duplex allows transmission in ___ directions",opts:["One","Two","Three","Multiple"],ans:1},
-            {q:"Full-duplex allows transmission ___",opts:["One way only","Two ways simultaneously","One way at a time","No transmission"],ans:1},
-            {q:"Analog signals are measured in ___",opts:["Bits","Bytes","Volts","Pixels"],ans:2},
-            {q:"Digital signals consist of ___ digits",opts:["0-9","0-1","0-7","0-15"],ans:1},
-            {q:"Twisted pair cable is a type of ___ media",opts:["Wireless","Guided","Unguided","Satellite"],ans:1},
-            {q:"Microwave is a type of ___ media",opts:["Wired","Guided","Wireless","Cable"],ans:2},
-            {q:"Coaxial cable is used in ___",opts:["Networks","Radio","Satellites","Phones only"],ans:0},
-            {q:"Fiber optic cable transmits data using ___",opts:["Electricity","Light","Sound","Radio"],ans:1},
-            {q:"MS Excel is a ___ program",opts:["Word processor","Spreadsheet","Database","Presentation"],ans:1},
-            {q:"In Excel, rows are referenced by ___",opts:["Letters","Numbers","Symbols","Colors"],ans:1},
-            {q:"In Excel, columns are referenced by ___",opts:["Numbers","Letters","Symbols","Colors"],ans:1},
-            {q:"A cell is an intersection of a row and ___",opts:["Cell","Column","Sheet","Workbook"],ans:1},
-            {q:"Excel formulas begin with ___",opts:["#","@","=","$"],ans:2},
-            {q:"SUM function is used for ___",opts:["Subtraction","Addition","Multiplication","Division"],ans:1},
-            {q:"AVERAGE function calculates the ___",opts:["Sum","Mean","Maximum","Minimum"],ans:1},
-            {q:"MAX function finds the ___ number",opts:["Smallest","Largest","Average","Middle"],ans:1},
-            {q:"MIN function finds the ___ number",opts:["Largest","Smallest","Average","Middle"],ans:1},
-            {q:"COUNT function counts the number of ___",opts:["Cells","Numbers","Letters","Rows"],ans:1},
-            {q:"IF function performs ___ operations",opts:["Mathematical","Conditional","Statistical","Logical only"],ans:1},
-            {q:"A workbook consists of ___",opts:["Cells","Rows","Worksheets","Columns"],ans:2},
-            {q:"AutoSum button is found in ___ tab",opts:["File","Home","Insert","Data"],ans:1},
-            {q:"Charts in Excel are created from ___ tab",opts:["Home","Insert","Data","View"],ans:1},
-            {q:"COUNTIF function counts cells that meet ___",opts:["No criteria","Any criteria","Specific criteria","All criteria"],ans:2},
-            {q:"SUMIF function adds cells that meet ___",opts:["No criteria","Specific criteria","All criteria","Any criteria"],ans:1},
-            {q:"Binary addition of 1 + 1 equals ___",opts:["1","10","11","0"],ans:1},
-            {q:"One's complement is obtained by ___ all bits",opts:["Adding","Inverting","Multiplying","Dividing"],ans:1},
-            {q:"Two's complement is one's complement plus ___",opts:["0","1","2","10"],ans:1},
-            {q:"In binary, 1010 + 0101 equals ___",opts:["1111","1110","1101","1100"],ans:0},
-            {q:"Floating point represents ___ numbers",opts:["Integer","Real","Binary","Octal"],ans:1},
-            {q:"BCD stands for ___",opts:["Binary Coded Decimal","Basic Coded Decimal","Binary Code Decimal","Basic Code Decimal"],ans:0},
-            {q:"In BCD, each decimal digit is represented by ___ bits",opts:["2","4","8","16"],ans:1},
-            {q:"A file is used for ___ information",opts:["Deleting","Storing","Processing","Displaying"],ans:1},
-            {q:"A record is a collection of ___",opts:["Files","Fields","Databases","Tables"],ans:1},
-            {q:"Fields in a record may have ___ data types",opts:["Same","Different","No","One"],ans:1},
-            {q:"Files are used to store information ___",opts:["Temporarily","Permanently","Randomly","Never"],ans:1},
-            {q:"Records are distinguished from arrays by ___",opts:["Size","Type","Fixed fields with names","Length"],ans:2},
-            {q:"Batch processing processes data in ___",opts:["Real-time","Batches","Streams","Packets"],ans:1},
-            {q:"Online processing connects peripherals to ___",opts:["Printer","CPU","Monitor","Keyboard"],ans:1},
-            {q:"Real-time processing responds to events ___",opts:["Later","Immediately","Tomorrow","Never"],ans:1},
-            {q:"Time-sharing allocates ___ to users",opts:["Memory","Storage","Time-slices","Programs"],ans:2},
-            {q:"Distributed processing spreads tasks across ___",opts:["One computer","Multiple computers","No computers","One user"],ans:1},
-            {q:"Centralized processing is done by ___",opts:["Many computers","One central computer","Users","Networks"],ans:1},
-            {q:"Multitasking allows running ___ programs",opts:["One","Two","Multiple","No"],ans:2},
-            {q:"C++ is a ___ programming language",opts:["Low-level","High-level","Assembly","Machine"],ans:1},
-            {q:"C++ was developed by ___",opts:["Dennis Ritchie","Bjarne Stroustrup","James Gosling","Guido van Rossum"],ans:1},
-            {q:"C++ supports ___ programming",opts:["Procedural only","Object-oriented only","Both procedural and OOP","Functional only"],ans:2},
-            {q:"C++ is case ___",opts:["Insensitive","Sensitive","Neutral","Independent"],ans:1},
-            {q:"In C++, main function returns ___",opts:["void","int","char","float"],ans:1},
-            {q:"C++ uses ___ for single-line comments",opts:["//","/*","#","**"],ans:0},
-            {q:"C++ uses ___ for multi-line comments",opts:["//","/* */","##","'''"],ans:1},
-            {q:"cout is used for ___",opts:["Input","Output","Processing","Storage"],ans:1},
-            {q:"cin is used for ___",opts:["Output","Input","Processing","Storage"],ans:1},
-            {q:"Variable names in C++ must begin with ___",opts:["Number","Letter or underscore","Symbol","Space"],ans:1},
-            {q:"int data type stores ___",opts:["Decimals","Whole numbers","Characters","Text"],ans:1},
-            {q:"char data type stores ___",opts:["Numbers","Single character","Text","Decimals"],ans:1},
-            {q:"bool data type stores ___",opts:["Numbers","Characters","True or False","Text"],ans:2},
-            {q:"C++ statement ends with ___",opts:["Comma","Semicolon","Colon","Period"],ans:1},
-            {q:"Inheritance is a concept of ___",opts:["Procedural programming","Object-oriented programming","Functional programming","Logic programming"],ans:1},
-            {q:"A computer's speed is determined by the ___",opts:["Monitor","CPU","Keyboard","Mouse"],ans:1},
-            {q:"1 KB equals ___ bytes",opts:["100","1000","1024","1048"],ans:2},
-            {q:"1 MB equals ___ KB",opts:["100","1000","1024","1048"],ans:2},
-            {q:"1 GB equals ___ MB",opts:["100","1000","1024","1048"],ans:2},
-            {q:"Computer viruses are types of ___",opts:["Hardware","Malware","Firmware","Software tools"],ans:1},
-            {q:"Antivirus software is used to ___ viruses",opts:["Create","Spread","Detect and remove","Hide"],ans:2},
-            {q:"Firewall is used for ___",opts:["Storage","Security","Processing","Display"],ans:1},
-            {q:"HTTP stands for ___",opts:["Hyper Text Transfer Protocol","High Text Transfer Protocol","Hyper Text Transmission Protocol","High Text Transmission Protocol"],ans:0},
-            {q:"HTML stands for ___",opts:["Hyper Text Markup Language","High Text Markup Language","Hyper Text Making Language","High Text Making Language"],ans:0},
-            {q:"URL stands for ___",opts:["Uniform Resource Locator","Universal Resource Locator","Uniform Resource Location","Universal Resource Location"],ans:0},
-            {q:"PDF stands for ___",opts:["Portable Document Format","Printed Document Format","Portable Data Format","Printed Data Format"],ans:0},
-            {q:"USB stands for ___",opts:["Universal Serial Bus","United Serial Bus","Universal System Bus","United System Bus"],ans:0},
-            {q:"WiFi is a ___ technology",opts:["Wired","Wireless","Optical","Satellite"],ans:1},
-            {q:"Bluetooth is used for ___ communication",opts:["Long-range","Short-range","Satellite","Underwater"],ans:1},
-            {q:"Cloud computing provides services over the ___",opts:["LAN","Internet","Intranet","USB"],ans:1}
-        ];
-
-        let currentStudent = null;
-        let examQuestions = [];
-        let currentQuestionIndex = 0;
-        let userAnswers = [];
-        let timeLeft = 900;
-        let timerInterval = null;
-
-        window.addEventListener('load', () => {
-            signInAnonymously(auth).catch(err => console.error(err));
-        });
-
-        window.startExam = function() {
-            const name = document.getElementById('studentName').value.trim();
-            const email = document.getElementById('studentEmail').value.trim();
-            const matric = document.getElementById('matricNumber').value.trim();
-            if (!name || !email) {
-                alert('Please enter your name and email');
-                return;
-            }
-            currentStudent = { name, email, matric };
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('introScreen').classList.remove('hidden');
-        };
-
-        window.beginExam = function() {
-            const shuffled = [...questionBank].sort(() => Math.random() - 0.5);
-            examQuestions = shuffled.slice(0, 70).sort(() => Math.random() - 0.5);
-            userAnswers = new Array(70).fill(null);
-            document.getElementById('introScreen').classList.add('hidden');
-            document.getElementById('examScreen').classList.remove('hidden');
-            renderQuestionNav();
-            displayQuestion();
-            startTimer();
-        };
-
-        function startTimer() {
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                const minutes = Math.floor(timeLeft / 60);
-                const seconds = timeLeft % 60;
-                const timerEl = document.getElementById('timer');
-                timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-                if (timeLeft <= 60) timerEl.classList.add('warning');
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    submitExam();
-                }
-            }, 1000);
-        }
-
-        function renderQuestionNav() {
-            const nav = document.getElementById('questionNav');
-            nav.innerHTML = '';
-            for (let i = 0; i < 70; i++) {
-                const btn = document.createElement('button');
-                btn.className = 'nav-btn';
-                btn.textContent = i + 1;
-                btn.onclick = () => goToQuestion(i);
-                nav.appendChild(btn);
-            }
-            updateNav();
-        }
-
-        function updateNav() {
-            const btns = document.querySelectorAll('.nav-btn');
-            btns.forEach((btn, i) => {
-                btn.classList.remove('current', 'answered');
-                if (i === currentQuestionIndex) btn.classList.add('current');
-                else if (userAnswers[i] !== null) btn.classList.add('answered');
-            });
-        }
-
-        function displayQuestion() {
-            const q = examQuestions[currentQuestionIndex];
-            document.getElementById('currentQ').textContent = currentQuestionIndex + 1;
-            document.getElementById('questionText').textContent = q.q;
-            const opts = document.getElementById('optionsContainer');
-            opts.innerHTML = '';
-            q.opts.forEach((opt, i) => {
-                const div = document.createElement('div');
-                div.className = 'option';
-                if (userAnswers[currentQuestionIndex] === i) div.classList.add('selected');
-                div.textContent = opt;
-                div.onclick = () => selectAnswer(i);
-                opts.appendChild(div);
-            });
-            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
-            document.getElementById('nextBtn').disabled = currentQuestionIndex === 69;
-            const answered = userAnswers.filter(a => a !== null).length;
-            document.getElementById('progressBar').style.width = `${(answered / 70) * 100}%`;
-            updateNav();
-        }
-
-        function selectAnswer(optIndex) {
-            userAnswers[currentQuestionIndex] = optIndex;
-            displayQuestion();
-        }
-
-        window.goToQuestion = function(index) {
-            currentQuestionIndex = index;
-            displayQuestion();
-        };
-
-        window.nextQuestion = function() {
-            if (currentQuestionIndex < 69) {
-                currentQuestionIndex++;
-                displayQuestion();
-            }
-        };
-
-        window.previousQuestion = function() {
-            if (currentQuestionIndex > 0) {
-                currentQuestionIndex--;
-                displayQuestion();
-            }
-        };
-
-        window.submitExam = function() {
-            if (!confirm('Are you sure you want to submit your exam?')) return;
-            clearInterval(timerInterval);
-            let correct = 0, wrong = 0, unanswered = 0;
-            examQuestions.forEach((q, i) => {
-                if (userAnswers[i] === null) unanswered++;
-                else if (userAnswers[i] === q.ans) correct++;
-                else wrong++;
-            });
-            const score = ((correct / 70) * 100).toFixed(2);
-            document.getElementById('finalScore').textContent = score + '%';
-            document.getElementById('correctCount').textContent = correct;
-            document.getElementById('wrongCount').textContent = wrong;
-            document.getElementById('unansweredCount').textContent = unanswered;
-            document.getElementById('examScreen').classList.add('hidden');
-            document.getElementById('resultsScreen').classList.remove('hidden');
-            try {
-                addDoc(collection(db, 'results'), {
-                    name: currentStudent.name,
-                    email: currentStudent.email,
-                    matric: currentStudent.matric || 'N/A',
-                    score: parseFloat(score),
-                    correct: correct,
-                    wrong: wrong,
-                    unanswered: unanswered,
-                    timestamp: serverTimestamp()
-                });
-            } catch (err) {
-                console.error('Error saving results:', err);
-            }
-        };
-
-        window.openAdmin = function() {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('introScreen').classList.add('hidden');
-            document.getElementById('examScreen').classList.add('hidden');
-            document.getElementById('resultsScreen').classList.add('hidden');
-            document.getElementById('adminDashboard').classList.remove('hidden');
-            loadResults();
-        };
-
-        window.closeAdmin = function() {
-            document.getElementById('adminDashboard').classList.add('hidden');
-            location.reload();
-        };
-
-        function loadResults() {
-            const q = query(collection(db, 'results'), orderBy('timestamp', 'desc'));
-            onSnapshot(q, (snapshot) => {
-                const tbody = document.getElementById('resultsTableBody');
-                tbody.innerHTML = '';
-                snapshot.forEach((doc, i) => {
-                    const data = doc.data();
-                    const date = data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleString() : 'N/A';
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${i + 1}</td>
-                            <td>${data.name}</td>
-                            <td>${data.email}</td>
-                            <td>${data.matric}</td>
-                            <td>${data.score}%</td>
-                            <td>${data.correct}</td>
-                            <td>${data.wrong}</td>
-                            <td>${date}</td>
-                        </tr>
-                    `;
-                });
-            });
-        }
+    <script>
+const questionBank=[{q:"A computer is an electronic machine which accepts data in the form of ___",opts:["Output","Input","Storage","Processing"],ans:1},{q:"Computer science is the study of theory, experimentation, and ___",opts:["Engineering","Mathematics","Physics","Chemistry"],ans:0},{q:"What does a computer supply results as?",opts:["Data","Input","Information","Processing"],ans:2},{q:"A computer operates under the control of a ___",opts:["Stored program","User","Monitor","Keyboard"],ans:0},{q:"Computer science involves systematic study of ___",opts:["Hardware only","Software only","Algorithms","Networks only"],ans:2},{q:"The first generation of computers used ___ for circuitry",opts:["Transistors","Vacuum tubes","Integrated circuits","Microprocessors"],ans:1},{q:"Which generation of computers used transistors?",opts:["First","Second","Third","Fourth"],ans:1},{q:"First generation computers were used from ___",opts:["1940-1956","1956-1963","1964-1971","1971-present"],ans:0},{q:"Second generation computers were used from ___",opts:["1940-1956","1956-1963","1964-1971","1971-present"],ans:1},{q:"The development of integrated circuits characterized which generation?",opts:["First","Second","Third","Fourth"],ans:2},{q:"Intel 4004 chip was introduced in which generation?",opts:["Second","Third","Fourth","Fifth"],ans:2},{q:"The fifth generation of computers is based on ___",opts:["Vacuum tubes","Transistors","Microprocessors","Artificial Intelligence"],ans:3},{q:"First generation computers relied on ___ language",opts:["Assembly","Machine","High-level","Natural"],ans:1},{q:"What did first generation computers use for input?",opts:["Keyboard","Mouse","Punched cards","Touch screen"],ans:2},{q:"GUI stands for ___",opts:["General User Interface","Graphical User Interface","Global User Interface","Generic User Interface"],ans:1},{q:"Which generation introduced operating systems?",opts:["First","Second","Third","Fourth"],ans:2},{q:"High level programming languages were developed in ___ generation",opts:["First","Second","Third","Fourth"],ans:1},{q:"COBOL and FORTRAN were developed in which generation?",opts:["First","Second","Third","Fourth"],ans:1},{q:"Which generation saw the development of keyboards and monitors?",opts:["First","Second","Third","Fourth"],ans:2},{q:"Microprocessors became available in which generation?",opts:["Second","Third","Fourth","Fifth"],ans:2},{q:"The Internet was developed in which generation?",opts:["Second","Third","Fourth","Fifth"],ans:2},{q:"Quantum computation is expected in which generation?",opts:["Third","Fourth","Fifth","Sixth"],ans:2},{q:"First generation computers generated a lot of ___",opts:["Sound","Heat","Light","Radiation"],ans:1},{q:"Second generation computers stored instructions in ___",opts:["Punched cards","Memory","Tapes","Drums"],ans:1},{q:"Third generation computers used ___ for interaction",opts:["Punched cards","Keyboards and monitors","Switches","Dials"],ans:1},{q:"Digital computers represent information in ___ form",opts:["Analog","Binary","Decimal","Hexadecimal"],ans:1},{q:"Analog computers represent information using ___",opts:["Binary digits","Physical quantities","Transistors","Microprocessors"],ans:1},{q:"Hybrid computers combine properties of ___ computers",opts:["Digital and Mainframe","Analog and Digital","Mini and Micro","Super and Main"],ans:1},{q:"Which is the largest type of computer by size?",opts:["Micro","Mini","Mainframe","Super"],ans:3},{q:"Personal computers are also called ___",opts:["Mainframe","Mini","Micro","Super"],ans:2},{q:"Special purpose computers are designed for ___",opts:["General tasks","Specific tasks","All tasks","No tasks"],ans:1},{q:"General purpose computers can perform ___",opts:["One task","Two tasks","Limited tasks","Variety of tasks"],ans:3},{q:"MAN stands for ___",opts:["Main Area Network","Metropolitan Area Network","Micro Area Network","Multiple Area Network"],ans:1},{q:"LAN covers ___",opts:["A city","A country","A building or campus","The world"],ans:2},{q:"WAN stands for ___",opts:["Wide Area Network","World Area Network","Wireless Area Network","Web Area Network"],ans:0},{q:"Which is NOT a characteristic of computers?",opts:["Speed","Accuracy","Fatigue","Storage"],ans:2},{q:"The ability to perform many tasks is called ___",opts:["Speed","Versatility","Accuracy","Diligence"],ans:1},{q:"Computers can execute instructions at ___ speed",opts:["Slow","Moderate","Very great","Variable"],ans:2},{q:"Computer errors are usually caused by ___",opts:["Hardware","Software","Human elements","Power"],ans:2},{q:"Computers can store ___ volume of data",opts:["Small","Moderate","Large","No"],ans:2},{q:"The ability to follow instructions without getting tired is ___",opts:["Speed","Accuracy","Consistency","Storage"],ans:2},{q:"Computers per se do not make ___",opts:["Calculations","Errors","Decisions","Processes"],ans:1},{q:"Ability to continue processing over extended period is ___",opts:["Speed","Repetitiveness","Storage","Accuracy"],ans:1},{q:"Computers can carry out ___ operations",opts:["Simple","Moderate","Complex","No"],ans:2},{q:"Hardware is the ___ part of the computer",opts:["Logical","Physical","Virtual","Abstract"],ans:1},{q:"CPU stands for ___",opts:["Central Program Unit","Central Processing Unit","Computer Processing Unit","Central Processor Utility"],ans:1},{q:"The heart of the computer is the ___",opts:["Monitor","Keyboard","CPU","Mouse"],ans:2},{q:"Which is an input device?",opts:["Monitor","Printer","Keyboard","Speaker"],ans:2},{q:"Which is an output device?",opts:["Mouse","Scanner","Printer","Microphone"],ans:2},{q:"RAM stands for ___",opts:["Read Access Memory","Random Access Memory","Rapid Access Memory","Ready Access Memory"],ans:1},{q:"ROM stands for ___",opts:["Read Only Memory","Random Only Memory","Rapid Only Memory","Ready Only Memory"],ans:0},{q:"The ALU performs ___ operations",opts:["Input/Output","Storage","Arithmetic and Logic","Control"],ans:2},{q:"The Control Unit coordinates activities within the ___",opts:["Monitor","CPU","Keyboard","Printer"],ans:1},{q:"Main memory is also called ___ storage",opts:["Secondary","Primary","Tertiary","External"],ans:1},{q:"Secondary storage is also called ___ storage",opts:["Internal","Primary","External","Main"],ans:2},{q:"A mouse is an example of ___ device",opts:["Output","Input","Storage","Processing"],ans:1},{q:"A monitor is an example of ___ device",opts:["Input","Output","Storage","Processing"],ans:1},{q:"Data in RAM is ___",opts:["Permanent","Volatile","Read-only","Protected"],ans:1},{q:"Data in ROM is ___",opts:["Volatile","Temporary","Permanent","Erasable"],ans:2},{q:"BIOS stands for ___",opts:["Basic Input Output System","Binary Input Output System","Basic Internal Output System","Binary Internal Output System"],ans:0},{q:"A scanner is used for ___",opts:["Printing","Displaying","Input","Processing"],ans:2},{q:"The motherboard contains all vital computer ___",opts:["Software","Parts","Data","Programs"],ans:1},{q:"CPU speed is measured in ___",opts:["Bytes","Hertz","Bits","Pixels"],ans:1},{q:"Software is the ___ part of computer",opts:["Physical","Visible","Invisible","Tangible"],ans:2},{q:"System software controls the ___",opts:["User","Hardware","Data","Input"],ans:1},{q:"Application software is designed to help users perform ___",opts:["System tasks","Specific tasks","No tasks","Hardware tasks"],ans:1},{q:"OS stands for ___",opts:["Open System","Operating System","Output System","Online System"],ans:1},{q:"Which is system software?",opts:["MS Word","MS Excel","Windows","PowerPoint"],ans:2},{q:"Which is application software?",opts:["Windows","Linux","MS Word","DOS"],ans:2},{q:"MS Word is a ___ application",opts:["Spreadsheet","Word processing","Database","Presentation"],ans:1},{q:"MS Excel is used for ___",opts:["Word processing","Presentations","Spreadsheets","Graphics"],ans:2},{q:"DBMS stands for ___",opts:["Data Base Management System","Digital Base Management System","Data Binary Management System","Digital Binary Management System"],ans:0},{q:"Utility programs perform ___ tasks",opts:["Complex","System","Routine","No"],ans:2},{q:"GUI provides ___ methods for using computers",opts:["Complex","Difficult","Intuitive","Technical"],ans:2},{q:"The main function of an OS is to manage ___",opts:["Users","Resources","Programs","Data"],ans:1},{q:"Which is an operating system?",opts:["MS Word","Unix","Excel","PowerPoint"],ans:1},{q:"Windows is an example of ___",opts:["Hardware","Application","Operating System","Utility"],ans:2},{q:"Multiprogramming allows execution of ___",opts:["One program","Two programs","Multiple programs","No programs"],ans:2},{q:"Time-sharing allows ___ users to share the computer",opts:["One","Two","Multiple","No"],ans:2},{q:"Real-time systems are used for ___",opts:["General tasks","Time-critical tasks","Simple tasks","No tasks"],ans:1},{q:"Batch processing processes data in ___",opts:["Real-time","Batches","Individually","Randomly"],ans:1},{q:"Which OS function manages memory?",opts:["File management","Memory management","Process management","Device management"],ans:1},{q:"A bit is an acronym for ___",opts:["Binary Digit","Binary Integer","Basic Digit","Basic Integer"],ans:0},{q:"A byte consists of ___ bits",opts:["4","8","16","32"],ans:1},{q:"A nibble consists of ___ bits",opts:["2","4","8","16"],ans:1},{q:"Binary uses ___ digits",opts:["0-7","0-9","0-1","0-15"],ans:2},{q:"Octal uses ___ as base",opts:["2","8","10","16"],ans:1},{q:"Decimal uses ___ as base",opts:["2","8","10","16"],ans:2},{q:"Hexadecimal uses ___ as base",opts:["2","8","10","16"],ans:3},{q:"ASCII stands for ___",opts:["American Standard Code for Information Interchange","American System Code for Information Interchange","American Standard Code for Internet Interchange","American System Code for Internet Interchange"],ans:0},{q:"EBCDIC uses ___ bits per character",opts:["4","7","8","16"],ans:2},{q:"ASCII uses ___ bits per character",opts:["4","7","8","16"],ans:1},{q:"Binary 1010 equals ___ in decimal",opts:["8","10","12","14"],ans:1},{q:"Decimal 15 equals ___ in binary",opts:["1111","1110","1101","1100"],ans:0},{q:"A network is a collection of ___ computers",opts:["One","Two or more","Three","Four"],ans:1},{q:"LAN stands for ___",opts:["Large Area Network","Local Area Network","Long Area Network","Limited Area Network"],ans:1},{q:"Star topology uses a central ___",opts:["Computer","Hub","Cable","Server"],ans:1},{q:"In bus topology, all devices share ___ communication line",opts:["Multiple","Two","Single","No"],ans:2},{q:"Ring topology connects each host to ___ other machines",opts:["One","Two","Three","Four"],ans:1},{q:"Mesh topology provides ___ reliability",opts:["Low","Moderate","High","No"],ans:2},{q:"Internet is a network of ___",opts:["Computers","Networks","Servers","Devices"],ans:1},{q:"TCP/IP is used in ___",opts:["LAN only","WAN only","Internet","MAN only"],ans:2},{q:"Email is an ___ service",opts:["Internet","LAN","WAN","MAN"],ans:0},{q:"WWW stands for ___",opts:["World Wide Web","Wide World Web","World Web Wide","Web World Wide"],ans:0},{q:"Data communication is transmission of ___ data",opts:["Analog","Digital","Electronic","Manual"],ans:2},{q:"Simplex communication is ___ communication",opts:["Two-way","One-way","Multi-way","No"],ans:1},{q:"Half-duplex allows transmission in ___ directions",opts:["One","Two","Three","Multiple"],ans:1},{q:"Full-duplex allows transmission ___",opts:["One way only","Two ways simultaneously","One way at a time","No transmission"],ans:1},{q:"Analog signals are measured in ___",opts:["Bits","Bytes","Volts","Pixels"],ans:2},{q:"Digital signals consist of ___ digits",opts:["0-9","0-1","0-7","0-15"],ans:1},{q:"Twisted pair cable is a type of ___ media",opts:["Wireless","Guided","Unguided","Satellite"],ans:1},{q:"Microwave is a type of ___ media",opts:["Wired","Guided","Wireless","Cable"],ans:2},{q:"Coaxial cable is used in ___",opts:["Networks","Radio","Satellites","Phones only"],ans:0},{q:"Fiber optic cable transmits data using ___",opts:["Electricity","Light","Sound","Radio"],ans:1},{q:"MS Excel is a ___ program",opts:["Word processor","Spreadsheet","Database","Presentation"],ans:1},{q:"In Excel, rows are referenced by ___",opts:["Letters","Numbers","Symbols","Colors"],ans:1},{q:"In Excel, columns are referenced by ___",opts:["Numbers","Letters","Symbols","Colors"],ans:1},{q:"A cell is an intersection of a row and ___",opts:["Cell","Column","Sheet","Workbook"],ans:1},{q:"Excel formulas begin with ___",opts:["#","@","=","$"],ans:2},{q:"SUM function is used for ___",opts:["Subtraction","Addition","Multiplication","Division"],ans:1},{q:"AVERAGE function calculates the ___",opts:["Sum","Mean","Maximum","Minimum"],ans:1},{q:"MAX function finds the ___ number",opts:["Smallest","Largest","Average","Middle"],ans:1},{q:"MIN function finds the ___ number",opts:["Largest","Smallest","Average","Middle"],ans:1},{q:"COUNT function counts the number of ___",opts:["Cells","Numbers","Letters","Rows"],ans:1},{q:"IF function performs ___ operations",opts:["Mathematical","Conditional","Statistical","Logical only"],ans:1},{q:"A workbook consists of ___",opts:["Cells","Rows","Worksheets","Columns"],ans:2},{q:"AutoSum button is found in ___ tab",opts:["File","Home","Insert","Data"],ans:1},{q:"Charts in Excel are created from ___ tab",opts:["Home","Insert","Data","View"],ans:1},{q:"COUNTIF function counts cells that meet ___",opts:["No criteria","Any criteria","Specific criteria","All criteria"],ans:2},{q:"SUMIF function adds cells that meet ___",opts:["No criteria","Specific criteria","All criteria","Any criteria"],ans:1},{q:"Binary addition of 1 + 1 equals ___",opts:["1","10","11","0"],ans:1},{q:"One's complement is obtained by ___ all bits",opts:["Adding","Inverting","Multiplying","Dividing"],ans:1},{q:"Two's complement is one's complement plus ___",opts:["0","1","2","10"],ans:1},{q:"In binary, 1010 + 0101 equals ___",opts:["1111","1110","1101","1100"],ans:0},{q:"Floating point represents ___ numbers",opts:["Integer","Real","Binary","Octal"],ans:1},{q:"BCD stands for ___",opts:["Binary Coded Decimal","Basic Coded Decimal","Binary Code Decimal","Basic Code Decimal"],ans:0},{q:"In BCD, each decimal digit is represented by ___ bits",opts:["2","4","8","16"],ans:1},{q:"A file is used for ___ information",opts:["Deleting","Storing","Processing","Displaying"],ans:1},{q:"A record is a collection of ___",opts:["Files","Fields","Databases","Tables"],ans:1},{q:"Fields in a record may have ___ data types",opts:["Same","Different","No","One"],ans:1},{q:"Files are used to store information ___",opts:["Temporarily","Permanently","Randomly","Never"],ans:1},{q:"Records are distinguished from arrays by ___",opts:["Size","Type","Fixed fields with names","Length"],ans:2},{q:"Batch processing processes data in ___",opts:["Real-time","Batches","Streams","Packets"],ans:1},{q:"Online processing connects peripherals to ___",opts:["Printer","CPU","Monitor","Keyboard"],ans:1},{q:"Real-time processing responds to events ___",opts:["Later","Immediately","Tomorrow","Never"],ans:1},{q:"Time-sharing allocates ___ to users",opts:["Memory","Storage","Time-slices","Programs"],ans:2},{q:"Distributed processing spreads tasks across ___",opts:["One computer","Multiple computers","No computers","One user"],ans:1},{q:"Centralized processing is done by ___",opts:["Many computers","One central computer","Users","Networks"],ans:1},{q:"Multitasking allows running ___ programs",opts:["One","Two","Multiple","No"],ans:2},{q:"C++ is a ___ programming language",opts:["Low-level","High-level","Assembly","Machine"],ans:1},{q:"C++ was developed by ___",opts:["Dennis Ritchie","Bjarne Stroustrup","James Gosling","Guido van Rossum"],ans:1},{q:"C++ supports ___ programming",opts:["Procedural only","Object-oriented only","Both procedural and OOP","Functional only"],ans:2},{q:"C++ is case ___",opts:["Insensitive","Sensitive","Neutral","Independent"],ans:1},{q:"In C++, main function returns ___",opts:["void","int","char","float"],ans:1},{q:"C++ uses ___ for single-line comments",opts:["//","/*","#","**"],ans:0},{q:"C++ uses ___ for multi-line comments",opts:["//","/* */","##","'''"],ans:1},{q:"cout is used for ___",opts:["Input","Output","Processing","Storage"],ans:1},{q:"cin is used for ___",opts:["Output","Input","Processing","Storage"],ans:1},{q:"Variable names in C++ must begin with ___",opts:["Number","Letter or underscore","Symbol","Space"],ans:1},{q:"int data type stores ___",opts:["Decimals","Whole numbers","Characters","Text"],ans:1},{q:"char data type stores ___",opts:["Numbers","Single character","Text","Decimals"],ans:1},{q:"bool data type stores ___",opts:["Numbers","Characters","True or False","Text"],ans:2},{q:"C++ statement ends with ___",opts:["Comma","Semicolon","Colon","Period"],ans:1},{q:"Inheritance is a concept of ___",opts:["Procedural programming","Object-oriented programming","Functional programming","Logic programming"],ans:1},{q:"A computer's speed is determined by the ___",opts:["Monitor","CPU","Keyboard","Mouse"],ans:1},{q:"1 KB equals ___ bytes",opts:["100","1000","1024","1048"],ans:2},{q:"1 MB equals ___ KB",opts:["100","1000","1024","1048"],ans:2},{q:"1 GB equals ___ MB",opts:["100","1000","1024","1048"],ans:2},{q:"Computer viruses are types of ___",opts:["Hardware","Malware","Firmware","Software tools"],ans:1},{q:"Antivirus software is used to ___ viruses",opts:["Create","Spread","Detect and remove","Hide"],ans:2},{q:"Firewall is used for ___",opts:["Storage","Security","Processing","Display"],ans:1},{q:"HTTP stands for ___",opts:["Hyper Text Transfer Protocol","High Text Transfer Protocol","Hyper Text Transmission Protocol","High Text Transmission Protocol"],ans:0},{q:"HTML stands for ___",opts:["Hyper Text Markup Language","High Text Markup Language","Hyper Text Making Language","High Text Making Language"],ans:0},{q:"URL stands for ___",opts:["Uniform Resource Locator","Universal Resource Locator","Uniform Resource Location","Universal Resource Location"],ans:0},{q:"PDF stands for ___",opts:["Portable Document Format","Printed Document Format","Portable Data Format","Printed Data Format"],ans:0},{q:"USB stands for ___",opts:["Universal Serial Bus","United Serial Bus","Universal System Bus","United System Bus"],ans:0},{q:"WiFi is a ___ technology",opts:["Wired","Wireless","Optical","Satellite"],ans:1},{q:"Bluetooth is used for ___ communication",opts:["Long-range","Short-range","Satellite","Underwater"],ans:1},{q:"Cloud computing provides services over the ___",opts:["LAN","Internet","Intranet","USB"],ans:1}];
+let currentStudent=null,examQuestions=[],currentQuestionIndex=0,userAnswers=[],timeLeft=900,timerInterval=null;
+document.getElementById('startExamBtn').addEventListener('click',startExam);
+document.getElementById('beginExamBtn').addEventListener('click',beginExam);
+document.getElementById('prevBtn').addEventListener('click',previousQuestion);
+document.getElementById('nextBtn').addEventListener('click',nextQuestion);
+document.getElementById('submitExamBtn').addEventListener('click',submitExam);
+document.getElementById('retakeBtn').addEventListener('click',()=>location.reload());
+function startExam(){const name=document.getElementById('studentName').value.trim(),email=document.getElementById('studentEmail').value.trim(),matric=document.getElementById('matricNumber').value.trim();if(!name||!email){alert('Please enter your name and email');return}currentStudent={name,email,matric};document.getElementById('loginScreen').classList.add('hidden');document.getElementById('introScreen').classList.remove('hidden')}
+function beginExam(){const shuffled=[...questionBank].sort(()=>Math.random()-0.5);examQuestions=shuffled.slice(0,70).sort(()=>Math.random()-0.5);userAnswers=new Array(70).fill(null);document.getElementById('introScreen').classList.add('hidden');document.getElementById('examScreen').classList.remove('hidden');renderQuestionNav();displayQuestion();startTimer()}
+function startTimer(){timerInterval=setInterval(()=>{timeLeft--;const minutes=Math.floor(timeLeft/60),seconds=timeLeft%60,timerEl=document.getElementById('timer');timerEl.textContent=`${minutes}:${seconds.toString().padStart(2,'0')}`;if(timeLeft<=60)timerEl.classList.add('warning');if(timeLeft<=0){clearInterval(timerInterval);submitExam()}},1000)}
+function renderQuestionNav(){const nav=document.getElementById('questionNav');nav.innerHTML='';for(let i=0;i<70;i++){const btn=document.createElement('button');btn.className='nav-btn';btn.textContent=i+1;btn.onclick=()=>goToQuestion(i);nav.appendChild(btn)}updateNav()}
+function updateNav(){const btns=document.querySelectorAll('.nav-btn');btns.forEach((btn,i)=>{btn.classList.remove('current','answered');if(i===currentQuestionIndex)btn.classList.add('current');else if(userAnswers[i]!==null)btn.classList.add('answered')})}
+function displayQuestion(){const q=examQuestions[currentQuestionIndex];document.getElementById('currentQ').textContent=currentQuestionIndex+1;document.getElementById('questionText').textContent=q.q;const opts=document.getElementById('optionsContainer');opts.innerHTML='';q.opts.forEach((opt,i)=>{const div=document.createElement('div');div.className='option';if(userAnswers[currentQuestionIndex]===i)div.classList.add('selected');div.textContent=opt;div.onclick=()=>selectAnswer(i);opts.appendChild(div)});document.getElementById('prevBtn').disabled=currentQuestionIndex===0;document.getElementById('nextBtn').disabled=currentQuestionIndex===69;const answered=userAnswers.filter(a=>a!==null).length;document.getElementById('progressBar').style.width=`${(answered/70)*100}%`;updateNav()}
+function selectAnswer(optIndex){userAnswers[currentQuestionIndex]=optIndex;displayQuestion()}
+function goToQuestion(index){currentQuestionIndex=index;displayQuestion()}
+function nextQuestion(){if(currentQuestionIndex<69){currentQuestionIndex++;displayQuestion()}}
+function previousQuestion(){if(currentQuestionIndex>0){currentQuestionIndex--;displayQuestion()}}
+function submitExam(){if(!confirm('Are you sure you want to submit your exam?'))return;clearInterval(timerInterval);let correct=0,wrong=0,unanswered=0;examQuestions.forEach((q,i)=>{if(userAnswers[i]===null)unanswered++;else if(userAnswers[i]===q.ans)correct++;else wrong++});const score=((correct/70)*100).toFixed(2);document.getElementById('finalScore').textContent=score+'%';document.getElementById('correctCount').textContent=correct;document.getElementById('wrongCount').textContent=wrong;document.getElementById('unansweredCount').textContent=unanswered;displayReview();document.getElementById('examScreen').classList.add('hidden');document.getElementById('resultsScreen').classList.remove('hidden')}
+function displayReview(){const reviewSection=document.getElementById('reviewSection');reviewSection.innerHTML='<h2 style="text-align:center;margin-bottom:30px;color:#667eea;font-size:clamp(1.5em,4vw,2em);">📝 Answer Review</h2>';examQuestions.forEach((q,i)=>{const userAns=userAnswers[i],correctAns=q.ans,isCorrect=userAns===correctAns,isUnanswered=userAns===null;let statusClass=isUnanswered?'unanswered':(isCorrect?'correct':'wrong');const questionDiv=document.createElement('div');questionDiv.className=`review-question ${statusClass}`;let html=`<div class="review-q-text"><strong>Question ${i+1}:</strong> ${q.q}</div>`;if(isUnanswered){html+=`<div class="review-answer"><span class="answer-label" style="color:#ffa94d;">⚠️ Not Answered</span></div><div class="review-answer correct-answer"><span class="answer-label" style="color:#51cf66;">✓ Correct Answer:</span> ${q.opts[correctAns]}</div>`}else if(isCorrect){html+=`<div class="review-answer correct-answer"><span class="answer-label" style="color:#51cf66;">✓ Your Answer (Correct):</span> ${q.opts[userAns]}</div>`}else{html+=`<div class="review-answer wrong-answer"><span class="answer-label" style="color:#ff6b6b;">✗ Your Answer (Wrong):</span> ${q.opts[userAns]}</div><div class="review-answer correct-answer"><span class="answer-label" style="color:#51cf66;">✓ Correct Answer:</span> ${q.opts[correctAns]}</div>`}questionDiv.innerHTML=html;reviewSection.appendChild(questionDiv)})}
     </script>
 </body>
 </html>
